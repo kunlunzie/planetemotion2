@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Emosi Antar Planet</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Gaya Umum */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #0f0524;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        h1, h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #ffcc00;
+            text-shadow: 0 0 10px #ff6600;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin-top: 20px;
+        }
+        
+        h2 {
+            font-size: 2em;
+            color: #00ccff;
+            text-shadow: 0 0 10px #0066ff;
+        }
+        
+        button {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            margin: 10px;
+            box-shadow: 0 5px 15px rgba(255, 102, 0, 0.4);
+        }
+        
+        button:hover {
+            background-color: #ff9933;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 153, 51, 0.6);
+        }
+        
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        /* Halaman Beranda */
+        .welcome {
+            text-align: center;
+            margin: 40px auto;
+            max-width: 800px;
+            animation: fadeIn 1s;
+        }
+        
+        .hero {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            height: 300px;
+        }
+        
+        .planet-img {
+            width: 250px;
+            height: 250px;
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/12/02/34/planet-1973597_960_720.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: float 6s infinite ease-in-out;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .astronaut {
+            width: 100px;
+            height: 100px;
+            background-image: url('https://cdn.pixabay.com/photo/2017/01/31/15/33/astronaut-2025548_960_720.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            animation: astronautMove 15s infinite linear;
+        }
+        
+        /* Halaman Planet */
+        .planet-container {
+            position: relative;
+            height: 60vh;
+            margin: 20px auto;
+            background-image: url('https://cdn.pixabay.com/photo/2016/09/29/13/08/planet-1702788_960_720.jpg');
+            background-size: cover;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        
+        .planet {
+            position: absolute;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: float 6s infinite ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: white;
+            text-shadow: 1px 1px 3px black;
+            font-family: 'Fredoka One', cursive;
+        }
+        
+        .planet:hover {
+            transform: scale(1.2) rotate(20deg);
+            z-index: 10;
+        }
+        
+        .info-panel {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px dashed #ffcc00;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            display: none;
+            animation: glow 2s infinite alternate;
+        }
+        
+        .face {
+            font-size: 3em;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        /* Halaman Quiz */
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .question {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .option {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .option:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        
+        /* Halaman Galeri */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .gallery-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .gallery-img {
+            width: 100%;
+            height: 120px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin-bottom: 10px;
+        }
+        
+        /* Animasi */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        @keyframes astronautMove {
+            0% { transform: translateX(-200px) translateY(0); }
+            25% { transform: translateX(0) translateY(-50px); }
+            50% { transform: translateX(200px) translateY(0); }
+            75% { transform: translateX(0) translateY(-50px); }
+            100% { transform: translateX(-200px) translateY(0); }
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 10px #ffcc00; }
+            to { box-shadow: 0 0 30px #ff6600; }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Responsif */
+        @media (max-width: 768px) {
+            .planet-container {
+                height: 50vh;
+            }
+            
+            .planet-img {
+                width: 180px;
+                height: 180px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .options {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="app">
+        <!-- Halaman akan dimuat dinamis di sini -->
+    </div>
+
+    <script>
+        // Data Aplikasi
+        const appData = {
+            currentPage: 'home',
+            quizProgress: 0,
+            quizScore: 0,
+            visitedPlanets: []
+        };
+        
+        // Data Planet (6 planet)
+        const planets = [
+            {
+                name: "Bumi",
+                color: "linear-gradient(135deg, #1E90FF, #00BFFF)",
+                size: 110,
+                emotion: "Bahagia",
+                face: "😊",
+                description: "Bumi biru kita selalu ceria! Dia suka berbagi kebahagiaan dengan semua makhluk di permukaannya.",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/30/earth-11009_960_720.jpg"
+            },
+            {
+                name: "Mars",
+                color: "linear-gradient(135deg, #FF4500, #FF6347)",
+                size: 90,
+                emotion: "Semangat",
+                face: "😤",
+                description: "Mars si merah penuh energi dan tekad! Dia tidak mudah menyerah dan selalu bersemangat.",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/39/mars-11012_960_720.jpg"
+            },
+            {
+                name: "Jupiter",
+                color: "linear-gradient(135deg, #F4A460, #DAA520)",
+                size: 150,
+                emotion: "Optimis",
+                face: "😄",
+                description: "Jupiter yang besar selalu melihat sisi baik dari segala situasi. Optimismenya menular!",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/31/jupiter-11010_960_720.jpg"
+            },
+            {
+                name: "Venus",
+                color: "linear-gradient(135deg, #FFA07A, #FF7F50)",
+                size: 100,
+                emotion: "Cinta",
+                face: "😍",
+                description: "Venus yang merah muda selalu penuh cinta dan kehangatan. Dia suka membuat semua orang merasa diterima.",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/28/venus-11004_960_720.jpg"
+            },
+            {
+                name: "Saturnus",
+                color: "linear-gradient(135deg, #DAA520, #FFD700)",
+                size: 130,
+                emotion: "Bijaksana",
+                face: "🧐",
+                description: "Saturnus dengan cincinnya yang cantik sangat bijaksana. Dia suka memberikan nasihat yang tepat.",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/38/saturn-11011_960_720.jpg"
+            },
+            {
+                name: "Neptunus",
+                color: "linear-gradient(135deg, #4169E1, #0000FF)",
+                size: 115,
+                emotion: "Misterius",
+                face: "😎",
+                description: "Neptunus si biru tua penuh misteri dan kedalaman. Dia mengajak kita menjelajahi perasaan yang lebih dalam.",
+                image: "https://cdn.pixabay.com/photo/2011/12/13/14/32/neptune-11014_960_720.jpg"
+            }
+        ];
+        
+        // Data Quiz
+        const quizQuestions = [
+            {
+                question: "Planet mana yang paling cocok mewakili perasaan bahagia?",
+                options: [
+                    { text: "Mars", correct: false },
+                    { text: "Bumi", correct: true },
+                    { text: "Neptunus", correct: false },
+                    { text: "Saturnus", correct: false }
+                ]
+            },
+            {
+                question: "Jika kamu merasa penuh semangat, planet apa yang akan kamu kunjungi?",
+                options: [
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: false },
+                    { text: "Mars", correct: true },
+                    { text: "Neptunus", correct: false }
+                ]
+            },
+            {
+                question: "Planet mana yang paling bijaksana?",
+                options: [
+                    { text: "Saturnus", correct: true },
+                    { text: "Bumi", correct: false },
+                    { text: "Venus", correct: false },
+                    { text: "Jupiter", correct: false }
+                ]
+            }
+        ];
+        
+        // Fungsi untuk mengubah halaman
+        function loadPage(page) {
+            appData.currentPage = page;
+            const app = document.getElementById('app');
+            
+            if (page === 'home') {
+                app.innerHTML = `
+                    <div class="welcome">
+                        <h1>Petualangan Emosi Antar Planet</h1>
+                        <p>Ikuti astronot kecil kita dalam petualangan mengenal emosi melalui 6 planet yang luar biasa!</p>
+                        
+                        <div class="hero">
+                            <div class="planet-img"></div>
+                            <div class="astronaut"></div>
+                        </div>
+                        
+                        <p>Setiap planet memiliki kepribadian unik yang mewakili berbagai emosi manusia. Ayo jelajahi!</p>
+                        
+                        <div class="btn-container">
+                            <button onclick="loadPage('planets')">🪐 Jelajahi Planet</button>
+                            <button onclick="loadPage('quiz')">🧠 Quiz Planet</button>
+                            <button onclick="loadPage('gallery')">📷 Galeri Planet</button>
+                        </div>
+                    </div>
+                `;
+            } 
+            else if (page === 'planets') {
+                app.innerHTML = `
+                    <h1>Jelajahi Planet Emosi</h1>
+                    <p style="text-align: center;">Klik pada planet untuk mengenal emosi yang diwakilinya!</p>
+                    
+                    <div class="planet-container" id="planetContainer"></div>
+                    
+                    <div class="info-panel" id="infoPanel">
+                        <h2 id="planetName"></h2>
+                        <div class="face" id="planetFace"></div>
+                        <p id="planetEmotion"></p>
+                        <p id="planetDescription"></p>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button onclick="loadPage('home')">🏠 Beranda</button>
+                        <button onclick="loadPage('gallery')">📷 Lihat Galeri</button>
+                    </div>
+                `;
+                
+                createPlanets();
+            }
+            else if (page === 'quiz') {
+                if (appData.quizProgress >= quizQuestions.length) {
+                    showQuizResult();
+                    return;
+                }
+                
+                const currentQuestion = quizQuestions[appData.quizProgress];
+                app.innerHTML = `
+                    <h1>Quiz Planet Emosi</h1>
+                    
+                    <div class="quiz-container">
+                        <div class="question">${currentQuestion.question}</div>
+                        
+                        <div class="options">
+                            ${currentQuestion.options.map(option => `
+                                <div class="option" onclick="answerQuiz(${option.correct})">
+                                    ${option.text}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button onclick="loadPage('home')">🏠 Beranda</button>
+                    </div>
+                `;
+            }
+            else if (page === 'gallery') {
+                app.innerHTML = `
+                    <h1>Galeri Planet</h1>
+                    <p style="text-align: center;">Koleksi gambar planet-planet emosi kita</p>
+                    
+                    <div class="gallery">
+                        ${planets.map(planet => `
+                            <div class="gallery-item" onclick="showPlanetInfoFromGallery('${planet.name}')">
+                                <div class="gallery-img" style="background-image: url('${planet.image}')"></div>
+                                <h3>${planet.name}</h3>
+                                <p>${planet.emotion}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="btn-container">
+                        <button onclick="loadPage('home')">🏠 Beranda</button>
+                        <button onclick="loadPage('planets')">🪐 Jelajahi Planet</button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Fungsi membuat planet
+        function createPlanets() {
+            const planetContainer = document.getElementById('planetContainer');
+            planetContainer.innerHTML = '';
+            
+            const containerWidth = planetContainer.clientWidth;
+            const containerHeight = planetContainer.clientHeight;
+            
+            planets.forEach((planet, index) => {
+                const planetElement = document.createElement('div');
+                planetElement.className = 'planet';
+                planetElement.style.width = `${planet.size}px`;
+                planetElement.style.height = `${planet.size}px`;
+                planetElement.style.background = planet.color;
+                planetElement.textContent = planet.name;
+                
+                // Posisi melingkar
+                const angle = (index / planets.length) * Math.PI * 2;
+                const distance = Math.min(containerWidth, containerHeight) * 0.35;
+                const x = containerWidth / 2 + Math.cos(angle) * distance - planet.size / 2;
+                const y = containerHeight / 2 + Math.sin(angle) * distance - planet.size / 2;
+                
+                planetElement.style.left = `${x}px`;
+                planetElement.style.top = `${y}px`;
+                
+                planetElement.dataset.info = JSON.stringify({
+                    name: planet.name,
+                    emotion: planet.emotion,
+                    face: planet.face,
+                    description: planet.description
+                });
+                
+                planetElement.addEventListener('click', showPlanetInfo);
+                
+                planetContainer.appendChild(planetElement);
+            });
+        }
+        
+        // Fungsi menampilkan info planet
+        function showPlanetInfo(event) {
+            const planetInfo = JSON.parse(event.target.dataset.info);
+            const infoPanel = document.getElementById('infoPanel');
+            
+            document.getElementById('planetName').textContent = planetInfo.name;
+            document.getElementById('planetFace').textContent = planetInfo.face;
+            document.getElementById('planetEmotion').textContent = `Emosi: ${planetInfo.emotion}`;
+            document.getElementById('planetDescription').textContent = planetInfo.description;
+            
+            infoPanel.style.display = 'block';
+            
+            // Tambahkan ke daftar planet yang dikunjungi
+            if (!appData.visitedPlanets.includes(planetInfo.name)) {
+                appData.visitedPlanets.push(planetInfo.name);
+            }
+        }
+        
+        // Fungsi untuk menampilkan info planet dari galeri
+        function showPlanetInfoFromGallery(planetName) {
+            loadPage('planets');
+            
+            // Cari planet yang dipilih
+            const planet = planets.find(p => p.name === planetName);
+            if (planet) {
+                const infoPanel = document.getElementById('infoPanel');
+                
+                document.getElementById('planetName').textContent = planet.name;
+                document.getElementById('planetFace').textContent = planet.face;
+                document.getElementById('planetEmotion').textContent = `Emosi: ${planet.emotion}`;
+                document.getElementById('planetDescription').textContent = planet.description;
+                
+                infoPanel.style.display = 'block';
+            }
+        }
+        
+        // Fungsi menjawab quiz
+        function answerQuiz(isCorrect) {
+            if (isCorrect) {
+                appData.quizScore++;
+                alert("Benar! 🎉");
+            } else {
+                alert("Masih belum tepat, coba lagi! 💡");
+            }
+            
+            appData.quizProgress++;
+            loadPage('quiz');
+        }
+        
+        // Fungsi menampilkan hasil quiz
+        function showQuizResult() {
+            const app = document.getElementById('app');
+            const score = Math.round((appData.quizScore / quizQuestions.length) * 100);
+            
+            app.innerHTML = `
+                <h1>Hasil Quiz Kamu</h1>
+                
+                <div class="quiz-container" style="text-align: center;">
+                    <h2>Skor: ${score}%</h2>
+                    <p>Kamu menjawab ${appData.quizScore} dari ${quizQuestions.length} pertanyaan dengan benar!</p>
+                    
+                    ${score >= 80 ? 
+                        '<p>Luar biasa! Kamu benar-benar memahami emosi planet! 🌟</p>' : 
+                    score >= 50 ? 
+                        '<p>Bagus! Kamu sudah mulai memahami emosi planet. 😊</p>' : 
+                        '<p>Terus belajar ya! Kamu pasti bisa lebih baik lagi. 💪</p>'}
+                    
+                    <div style="margin: 30px 0;">
+                        <button onclick="resetQuiz()">🔄 Coba Lagi</button>
+                    </div>
+                </div>
+                
+                <div class="btn-container">
+                    <button onclick="loadPage('home')">🏠 Beranda</button>
+                    <button onclick="loadPage('planets')">🪐 Jelajahi Planet</button>
+                </div>
+            `;
+        }
+        
+        // Fungsi reset quiz
+        function resetQuiz() {
+            appData.quizProgress = 0;
+            appData.quizScore = 0;
+            loadPage('quiz');
+        }
+        
+        // Inisialisasi aplikasi
+        window.onload = function() {
+            loadPage('home');
+            
+            // Untuk tampilan planet yang responsif
+            window.addEventListener('resize', function() {
+                if (appData.currentPage === 'planets') {
+                    createPlanets();
+                }
+            });
+        };
+    </script>
+</body>
+</html>
